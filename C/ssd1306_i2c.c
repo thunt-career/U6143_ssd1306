@@ -527,7 +527,7 @@ void LCD_DisplayTemperature(void)
   else
   {
     OLED_DrawBMP(0, 0, 128, 4, BMP, 1);
-    OLED_ShowString(8, 0, host, 8);        // Display Hostname
+    OLED_ShowString(11, 0, host, 8);        // Display Hostname
     headerToggle = 0;
   }
 
