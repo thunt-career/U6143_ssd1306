@@ -17,7 +17,7 @@
 #include <limits.h>        // HOST_NAME_MAX
 
 int i2cfd;
-bool headerToggle;
+int headerToggle;
 
 /*
 * Init SSD1306
@@ -514,7 +514,7 @@ void LCD_DisplayTemperature(void)
   sprintf_fix(temp, 2, GetTemperature());       // Gets the temperature of the CPU
   sprintf_fix(cpu_perc, 4, GetCpuUsagePstat()); // Gets the load on the CPU
   strcpy(ip, GetIpAddress());                   // Gets the IP address of the default interface
-  gethostname(host, HOST_NAME_MAX)              // Gets the host name of device
+  gethostname(host, HOST_NAME_MAX);              // Gets the host name of device
 
   OLED_Clear();                                 // Clear the screen
   OLED_DrawBMP(0, 0, 128, 4, BMP, 0);
