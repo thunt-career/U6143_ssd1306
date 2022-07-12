@@ -517,18 +517,20 @@ void LCD_DisplayTemperature(void)
   gethostname(host, HOST_NAME_MAX);              // Gets the host name of device
 
   OLED_Clear();                                 // Clear the screen
-  OLED_DrawBMP(0, 0, 128, 4, BMP, 0);
 
   if (headerToggle == 0)
   {
+    OLED_DrawBMP(0, 0, 128, 4, BMP, 0);
     OLED_ShowString(8, 0, ip, 8);        // Display IP address
     headerToggle = 1;
   }
   else
   {
+    OLED_DrawBMP(0, 0, 128, 4, BMP, 1);
     OLED_ShowString(8, 0, host, 8);        // Display Hostname
     headerToggle = 0;
   }
+
   OLED_ShowString(48, 3, temp, 8);     // Display CPU temperature
   OLED_ShowString(85, 3, cpu_perc, 8); // Display CPU load
 }
@@ -545,7 +547,7 @@ void LCD_DisplayCpuMemory(void)
   if (sysinfo(&s_info) == 0) // Get memory information
   {
     OLED_ClearLint(2, 4);
-    OLED_DrawPartBMP(0, 2, 128, 4, BMP, 1);
+    OLED_DrawPartBMP(0, 2, 128, 4, BMP, 2);
 
     float freeram = ((unsigned long long int)s_info.freeram * (unsigned long long int)s_info.mem_unit >> 20) / 1024.0;
     sprintf_fix(free, 3, freeram);
@@ -604,7 +606,7 @@ void LCD_DisplaySdMemoryDf(void)
 */
 
   OLED_ClearLint(2, 4);
-  OLED_DrawPartBMP(0, 2, 128, 4, BMP, 2);
+  OLED_DrawPartBMP(0, 2, 128, 4, BMP, 3);
 
   OLED_ShowString(90, 3, total, 8);
   OLED_ShowString(55, 3, used, 8);
@@ -633,7 +635,7 @@ void LCD_DisplaySdMemoryStatfs(void)
 */
 
     OLED_ClearLint(2, 4);
-    OLED_DrawPartBMP(0, 2, 128, 4, BMP, 2);
+    OLED_DrawPartBMP(0, 2, 128, 4, BMP, 3);
 
     OLED_ShowString(90, 3, total, 8);
     OLED_ShowString(55, 3, used, 8);
@@ -653,11 +655,11 @@ void LCD_Display(unsigned short int count)
   {
   case 0:
     LCD_DisplayTemperature();
-	sleep(3);
+	  sleep(3);
     break;
   case 1:
     LCD_DisplayCpuMemory();
-	sleep(3);
+	  sleep(3);
     break;
   case 2:
     LCD_DisplaySdMemoryDf();
