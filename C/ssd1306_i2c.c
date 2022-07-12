@@ -12,10 +12,12 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>     // ioctl
 #include <net/if.h>        // if
-#include <unistd.h>        // close, sleep, usleep
+#include <unistd.h>        // close, sleep, usleep, gethostname
 #include <arpa/inet.h>     // inet_ntoa
+#include <limits.h>        // HOST_NAME_MAX
 
 int i2cfd;
+bool headerToggle;
 
 /*
 * Init SSD1306
@@ -123,6 +125,7 @@ void OLED_ShowChar(unsigned char x, unsigned char y, unsigned char chr, unsigned
     x = 0;
     y = y + 2;
   }
+
   if (Char_Size == 16)
   {
     OLED_Set_Pos(x, y);
@@ -132,7 +135,6 @@ void OLED_ShowChar(unsigned char x, unsigned char y, unsigned char chr, unsigned
     for (i = 0; i < 8; i++)
       OLED_WR_Byte(F8X16[c * 16 + i + 8], OLED_DATA);
   }
-
   else
   {
     OLED_Set_Pos(x, y);
@@ -507,14 +509,26 @@ void LCD_DisplayTemperature(void)
   char temp[3] = {0};
   char cpu_perc[5] = {0};
   char ip[16] = {0};
+  char host[64] = {0};
 
   sprintf_fix(temp, 2, GetTemperature());       // Gets the temperature of the CPU
   sprintf_fix(cpu_perc, 4, GetCpuUsagePstat()); // Gets the load on the CPU
   strcpy(ip, GetIpAddress());                   // Gets the IP address of the default interface
+  gethostname(host, HOST_NAME_MAX)              // Gets the host name of device
+
   OLED_Clear();                                 // Clear the screen
   OLED_DrawBMP(0, 0, 128, 4, BMP, 0);
 
-  OLED_ShowString(8, 0, ip, 8);        // Display IP address
+  if (headerToggle == 0)
+  {
+    OLED_ShowString(8, 0, ip, 8);        // Display IP address
+    headerToggle = 1;
+  }
+  else
+  {
+    OLED_ShowString(8, 0, host, 8);        // Display Hostname
+    headerToggle = 0;
+  }
   OLED_ShowString(48, 3, temp, 8);     // Display CPU temperature
   OLED_ShowString(85, 3, cpu_perc, 8); // Display CPU load
 }
