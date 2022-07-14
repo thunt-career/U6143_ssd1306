@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  U6143_ssd1306:
+    image: U6143_ssd1306
+    build:
+      context: .
+      dockerfile: ./Dockerfile
